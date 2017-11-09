@@ -21,13 +21,14 @@ cc($con);
 }
 
 function insertData($con,$sql){
-$query = mysqli_query($con, $sql);
-return $query;
-cc($con);
-//if(mysqli_query($con, $sql)){
-//echo "Records inserted successfully.";
-//} else{
-//echo "ERROR: Could not able to execute $sql. " . mysqli_error($con);
-//}
+//$query = mysqli_query($con, $sql);
+//return $query;
+//cc($con);
+if(mysqli_query($con, $sql)){
+echo "Records inserted successfully.";
+} else{
+echo "ERROR: Could not able to execute $sql. " . mysqli_error($con);
 }
+}
+cc($con);
 ?>

@@ -1,31 +1,36 @@
 <?php
 include('conectar.php');
-$_paramDeviceIdd = $_POST['paramdeviceId'];
+
+session_start();
+
+if($_SESSION['mail'] == true)
+{
+	$_paramEmail = $_SESSION['mail'];
+}
+
+$_paramDeviceId = $_POST['paramDeviceId'];
 $_paramDeviceDescription = $_POST['paramDescription'];
 $_paramDevicePassword = $_POST['paramToken'];
 
 $con=conex();
 
-$consulta = consulta_sql($con,"SELECT device FROM devices WHERE mail='$_paramEmail' OR password ='$_paramNick'");
+$_timeStamp = "CURRENT_TIMESTAMP";
+
+$consulta0 = consulta_sql($con,"SELECT usersid,user,password FROM users WHERE mail='$_paramEmail'");
+
+$row_1 = mysqli_fetch_array($consulta0, MYSQLI_NUM);
+$_valor = $row_1[0];
+$_valor1 = $row1[1];
+$_valor2 = md5($row[2]);
+
+$consulta = consulta_sql($con,"SELECT device FROM devices WHERE device='$_paramDeviceId'");
 
 $row = mysqli_fetch_array($consulta, MYSQLI_NUM);
 
-if($row[0]=="" || $row[1] =="")
+if($row[0]=="")
 {
-	if($_paramPasswd == $_paramPasswd1)
-	{
-		$_timeStamp = "CURRENT_TIMESTAMP";
-		$_crypt = md5($_paramPasswd);
-		$_query = insertData($con,"INSERT INTO users VALUES(NULL,$_timeStamp,'$_paramNick','$_crypt','$_paramEmail','$_paramNames','$_paramCompany','jose.jpg')");
-		if($_query)
-		{
-		shell_exec("./createUser.sh $_paramNick $_paramPasswd");
-		header("location: index.php");
-                }else{
-	                header("location: /pages/examples/register.php");
-                     }
-}
-}else{
-	        header("location: /pages/examples/register.php");
-		     }
+$_query = insertData($con,"INSERT INTO devices VALUES(NULL,'$_valor','$_paramDeviceId','$_paramDeviceDescription','$_paramDevicePassword',$_timeStamp)");
+shell_exec("createInstanceMosquitto.sh $_valor1 $_valor2 $_paramDeviceId");
+	header("location: /pages/examples/blank.php");
+}else{header("location: /pages/examples/blank.php");}
 ?>
