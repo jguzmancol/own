@@ -22,10 +22,10 @@ $consulta = consulta_sql($con,"SELECT nombres,empresa,fecha,foto FROM users WHER
 
 $row = mysqli_fetch_array($consulta, MYSQLI_NUM);
 
-if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['num_random']))
-{
-GeraHash(40);
-}
+//if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['num_random']))
+//{
+//GeraHash(12);
+//}
 function GeraHash($qtd){
 //Under the string $Caracteres you write all the characters you want to be used to randomly generate the code. 
 $Caracteres = 'ABCDEFGHIJKLMOPQRSTUVXWYZ0123456789!"#$%&/()=*[]:;abcd3fghijklmnopqrstuvwxyz'; 
@@ -377,7 +377,7 @@ return $Hash;
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-      <input value="<?php echo $random = GeraHash(20)?>" type="text" class="form-control" placeholder="Generación de Token" name="paramToken">
+      <input value="<?php echo $random = GeraHash(12)?>" type="text" class="form-control" placeholder="Generación de Token" name="paramToken">
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">

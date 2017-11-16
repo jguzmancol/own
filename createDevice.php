@@ -28,14 +28,13 @@ $row = mysqli_fetch_array($consulta, MYSQLI_NUM);
 
 if($row[0]=="")
 {
-$_query = insertData($con,"INSERT INTO devices VALUES(NULL,'$_valor','$_paramDeviceId','$_paramDeviceDescription','$_paramDevicePassword',$_timeStamp)");
+$_query = insertData($con,"INSERT INTO devices VALUES(NULL,$_valor,'$_paramDeviceId','$_paramDeviceDescription','$_paramDevicePassword',$_timeStamp)");
 
 $consulta1 = consulta_sql($con,"SELECT password FROM devices WHERE device='$_paramDeviceId'");
 
 $row_2 = mysqli_fetch_array($consulta1, MYSQLI_NUM);
 $_passwd = $row_2[0];
-
-shell_exec("./createInstanceMosquitto.sh $_valor1 $_passwd $_paramDeviceId");
-	#header("location: /pages/examples/blank.php");
+shell_exec("/var/www/html/./createInstanceMosquitto.sh $_valor1 $_passwd $_paramDeviceId");
+header("location: /pages/examples/blank.php");
 }else{header("location: /pages/examples/blank.php");}
 ?>
