@@ -377,7 +377,7 @@ return $Hash;
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-      <input value="<?php echo $random = GeraHash(20)  ?>" type="text" class="form-control" placeholder="Generación de Token" name="paramToken">
+      <input value="<?php echo $random = GeraHash(20)?>" type="text" class="form-control" placeholder="Generación de Token" name="paramToken">
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
