@@ -26,26 +26,6 @@ $row = mysqli_fetch_array($consulta, MYSQLI_NUM);
 //{
 //GeraHash(12);
 //}
-function GeraHash($qtd){
-//Under the string $Caracteres you write all the characters you want to be used to randomly generate the code. 
-$Caracteres = 'ABCDEFGHIJKLMOPQRSTUVXWYZ0123456789!"#$%&/()=*[]:;abcd3fghijklmnopqrstuvwxyz'; 
-$QuantidadeCaracteres = strlen($Caracteres); 
-$QuantidadeCaracteres--; 
-
-$Hash=NULL; 
-for($x=1;$x<=$qtd;$x++){ 
-$Posicao = rand(0,$QuantidadeCaracteres); 
-$Hash .= substr($Caracteres,$Posicao,1); 
-}
-return $Hash;
-} 
-//Here you specify how many characters the returning string must have 
-//echo GeraHash(30); 
-
-function device(){
-shell_exec('');
-}
-
 ?>
 
 <html>
@@ -77,6 +57,31 @@ shell_exec('');
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
+<script type="text/javascript" src="/js/jquery.js"></script>
+
+<script>
+function realizaProceso()
+{
+//var parametros = {"valorCaja1" : valorCaja1,
+//                  "valorCaja2" : valorCaja2
+//                 };
+                 $.ajax({
+		 		//data:  parametros,
+		 		//data:  ""
+                                url:   '../../ejemplo_ajax_proceso.php',
+                                type:  'post',
+                                beforeSend: function ()
+                                {
+                                        $("#Hash").html("Procesando, espere por favor...");
+                                },
+                                success:  function (response)
+                                {
+                                        $("#Hash").html(response);
+                                }
+                        });
+}
+</script>
+
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
 <div class="wrapper">
@@ -382,8 +387,11 @@ shell_exec('');
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-      <input value="<?php echo $random = GeraHash(12)?>" type="text" class="form-control" placeholder="Generación de Token" name="paramToken">
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+	<form action="../../../parameterDevice.php" method="post">
+      <input id="Hash"  type="text" class="form-control" placeholder="Generación de Token" name="paramToken">
+	<span class="glyphicon glyphicon-user form-control-feedback"></span>
+    		<input type="button" href="javascript:;" onclick="realizaProceso();return false;" value="Calcula"/>
+	</form>
       </div>
       <div class="form-group has-feedback">
       <div class="row">
@@ -401,10 +409,13 @@ shell_exec('');
 	</div>
 	</form>
 
+<input type="button" href="javascript:;" onclick="realizaProceso();return false;" value="Calcula"/>
+<br/>
+
 <form action="../../../parameterDevice.php" method="post">
     <button name="foo" value="upvote">Encender</button>
 </form>
-
+Resultado: <span id="">0</span>
 </div>
         </div>
         <!-- /.box-body -->

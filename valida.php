@@ -18,7 +18,7 @@ if($row[0]!="" && $row[1]!="")
 		$_SESSION["mail"]= $correo;
 		$_SESSION['start'] = time();
 		$_SESSION['expire'] = $_SESSION['start'] + (50 * 60);
-		header("location: /pages/examples/blank.php");
+		header("location: /pages/examples/blank1.php");
 	}
 }else{
 	header("location: /pages/examples/register.php");
