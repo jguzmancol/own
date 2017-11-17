@@ -416,7 +416,7 @@ if($row[4]=="admin")
 		</div>
                 <!-- /btn-group -->
                 <input id="Hash" type="text" class="form-control">
-              </div>
+	</div>
 	</div>
       <div class="input-group">
         <div class="input-group-btn">

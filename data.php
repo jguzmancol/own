@@ -5,12 +5,12 @@ include("conectar.php");
 
 $con = conex();
 
-$consulta1 = consulta_sql($con,"SELECT user,nombres,empresa,foto,rol,fecha FROM users WHERE mail='".$_SESSION['mail']."'");
+$consulta1 = consulta_sql($con,"SELECT user,nombres,empresa,foto,rol,fecha,password FROM users WHERE mail='".$_SESSION['mail']."'");
 
 $row1 = mysqli_fetch_array($consulta1, MYSQLI_NUM);
 
 if($row1[4]=="admin"){
-$consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as nombres, users.empresa as empresa, devices.device as dispositivo, devices.description as descripcion, devices.fecha as fecha_registro, devices.password as password, users.rol from users, devices where users.usersid=devices.usersid");
+$consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as nombres, users.empresa as empresa, devices.device as dispositivo, devices.description as descripcion, devices.fecha as fecha_registro, devices.password as password, users.rol, devices.devicesid from users, devices where users.usersid=devices.usersid");
 }else{
 $consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as nombres, users.empresa as empresa, devices.device as dispositivo, devices.description as descripcion, devices.fecha as fecha_registro, devices.password as password  from users, devices where users.usersid=devices.usersid and users.mail='".$_SESSION['mail']."'");
 }
@@ -274,7 +274,7 @@ $consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as no
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 	    <img src="fotos/<?php echo $row1[3]; ?>" class="user-image" alt="User Image">
-	    <span class="hidden-xs"><?php echo $row1[1]; ?></span>
+	    <span class="hidden-xs"><?php echo $row1[0]; ?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -336,19 +336,32 @@ $consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as no
         <li class="header">MAIN NAVIGATION</li>
         <li class="treeview">
           <a href="#">
-            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+            <i class="fa fa-cubes"></i> <span>Dispositivos</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="blank.php"><i class="fa fa-circle-o"></i> Dashboard</a></li>
+            <li><a href="blank.php"><i class="fa fa-tasks"></i> Nuevo Dispositivo</a></li>
+            <li><a href="data.php"><i class="fa fa-rss "></i> Listado de Dispositivos</a></li>
+            <li><a href="simple.html"><i class="fa fa-bar-chart"></i> Estadisticas</a></li>
           </ul>
         </li>
 <?php
 if($row1[4]=="admin")
 {
 ?>
+       <li class="treeview">
+          <a href="#">
+            <i class="fa fa-user"></i> <span>Registro Clientes</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="register.php"><i class="fa fa-user-plus"></i> Registrar</a></li>
+          </ul>
+        </li>
         <li class="treeview">
           <a href="#">
             <i class="fa fa-files-o"></i>
@@ -420,18 +433,6 @@ if($row1[4]=="admin")
 <?php
 }
 ?>
-        <li class="treeview active">
-          <a href="#">
-            <i class="fa fa-table"></i> <span>Dispositivos</span>
-            <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="simple.html"><i class="fa fa-circle-o"></i> Estadisticas</a></li>
-            <li class="active"><a href="data.php"><i class="fa fa-circle-o"></i> Listado de Dispositivos</a></li>
-          </ul>
-        </li>
   </aside>
 
   <!-- Content Wrapper. Contains page content -->
@@ -465,13 +466,16 @@ if($row1[4]=="admin")
                   <th>Descripcion</th>
 		  <th>Fecha Registro</th>
 		  <th>Password</th>
-		  <th>Borrar</th>
+		  <th>On</th>
+		  <th>Off</th>
                 </tr>
                 </thead>
                 <tbody>
 <?php
 while($fila=mysqli_fetch_array($consulta, MYSQLI_NUM))
 {
+	$_value_on="On";
+	$_value_off="Off";
 ?>
                 <tr>
                   <td><?php echo $fila[0]; ?></td>
@@ -481,17 +485,17 @@ while($fila=mysqli_fetch_array($consulta, MYSQLI_NUM))
                   <td><?php echo $fila[4]; ?></td>
 		  <td><?php echo $fila[5]; ?></td>
 		  <td><?php echo $fila[6]; ?></td>
-		  <td>
- 		  <a href="#">Borrar</a>
-		  </td>
-                </tr>
+		  <td> <input class="btn btn-primary btn-block btn-fat" type="button" href="javascript:;" onclick="prendeDevice($('<?php echo $fila[0]; ?>').val(),$('<?php echo $row1[6] ?>').val(),$('<?php echo $fila[3]; ?>').val(),$('<?php echo $_value_on ?>').val());return false;" value="<?php echo $_value_on ?>"/></td>
+
+		  <td> <input class="btn btn-primary btn-block btn-fat" type="button" href="javascript:;" onclick="prendeDevice($('<?php echo $fila[0]; ?>').val(),$('<?php echo $row1[6] ?>').val(),$('<?php echo $fila[3]; ?>').val(),$('<?php echo $_value_off ?>').val());return false;" value="<?php echo $_value_off ?>"/></td>
 <?php
 }
 ?>
                 </tbody>
               </table>
             </div>
-            <!-- /.box-body -->
+	    <!-- /.box-body -->
+	  <div class="box-footer">
           </div>
           <!-- /.box -->
         </div>
@@ -735,5 +739,52 @@ while($fila=mysqli_fetch_array($consulta, MYSQLI_NUM))
     })
   })
 </script>
+
+<script>
+function creaDevice(valor1,valor2,valor3,valor4)
+{
+
+	var parametros = {"paramUser" : 	valor1,
+			  "paramPassword" : 	valor2,
+			  "paramDevice": 	valor3,
+			  "paramMessage: ":	valor4
+									                             };
+        $.ajax({
+
+	data:  parametros,
+
+		url:   'estadodevice.php',
+
+		type:  'post',
+
+		beforeSend: function ()
+
+		{
+
+		$("#processing").html("Procesando, espere por favor...");
+	        },
+
+                success:  function (ok)
+                {
+                      //var value="";
+                      //notificacion(ok);
+                      //$("#valor1").val(value);
+                      //$("#valor2").val(value);
+                      //$("#Hash").val(value);
+                },
+
+                error:  function(error)
+                {
+	              //var value="";
+                      //error(error);
+                      //$("#valor1").val(value);
+                      //$("#valor2").val(value);
+                      //$("#Hash").val(value);
+                }
+                });
+                }
+			
+</script>
+
 </body>
 </html>
