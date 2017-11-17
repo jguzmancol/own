@@ -10,7 +10,7 @@ if($_SESSION['mail'] == true)
 
 $_paramDeviceId = $_POST['paramDeviceId'];
 $_paramDeviceDescription = $_POST['paramDescription'];
-$_paramDevicePassword = $_POST['paramToken'];
+$_paramDevicePassword = md5($_POST['paramToken']);
 
 $con=conex();
 
@@ -26,7 +26,7 @@ $consulta = consulta_sql($con,"SELECT device FROM devices WHERE device='$_paramD
 
 $row = mysqli_fetch_array($consulta, MYSQLI_NUM);
 
-if($row[0]=="")
+if(!$row[0])
 {
 $_query = insertData($con,"INSERT INTO devices VALUES(NULL,$_valor,'$_paramDeviceId','$_paramDeviceDescription','$_paramDevicePassword',$_timeStamp)");
 
@@ -34,7 +34,10 @@ $consulta1 = consulta_sql($con,"SELECT password FROM devices WHERE device='$_par
 
 $row_2 = mysqli_fetch_array($consulta1, MYSQLI_NUM);
 $_passwd = $row_2[0];
-shell_exec("/var/www/html/./createInstanceMosquitto.sh $_valor1 $_passwd $_paramDeviceId");
-header("location: /pages/examples/blank.php");
-}else{header("location: /pages/examples/blank.php");}
+//shell_exec("/var/www/html/./createInstanceMosquitto.sh $_valor1 $_passwd $_paramDeviceId");
+echo $response;
+//header("location: /pages/examples/blank.php"); 
+}else{
+echo $response;
+}//else{header("location: /pages/examples/blank.php");}
 ?>

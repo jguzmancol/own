@@ -1,31 +1,13 @@
 <?php
 session_start();
-if($_SESSION['mail'] == true){
-
-}else{
-header("Location: index.php");
-exit();
-}
-
-$now = time();
-
-if($now > $_SESSION['expire']){
-session_destroy();
-header("Location: lockscreen.php");
-exit();
-}
-
+include('valida_session.php');
 include("conectar.php");
+
 $con = conex();
 
-$consulta = consulta_sql($con,"SELECT nombres,empresa,fecha,foto FROM users WHERE mail='".$_SESSION['mail']."'");
+$consulta = consulta_sql($con,"SELECT user,nombres,empresa,foto FROM users WHERE mail='".$_SESSION['mail']."'");
 
 $row = mysqli_fetch_array($consulta, MYSQLI_NUM);
-
-//if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['num_random']))
-//{
-//GeraHash(12);
-//}
 ?>
 
 <html>
@@ -63,13 +45,46 @@ $row = mysqli_fetch_array($consulta, MYSQLI_NUM);
 
 <script>
 
-function alerta()
+function notificacion(mensaje){
+alertify.success(mensaje); 
+return false;
+}
+
+function error(mensaje){
+alertify.error(mensaje); 
+return false; 
+}
+
+function creaDevice(valor1,valor2,valor3)
 {
-	//un alert
-	alertify.alert("<b>Blog Reaccion Estudio</b> probando Alertify", function () 
+	var parametros = {"paramDeviceId" : valor1,
+			  "paramDescription" : valor2,
+			  "paramToken": valor3
+	                 };
+	$.ajax({
+	data:  parametros,
+	url:   'createDevice.php',
+	type:  'post',
+	beforeSend: function ()
 	{
-		//aqui introducimos lo que haremos tras cerrar la alerta.
-		//por ejemplo -->  location.href = 'http://www.google.es/';  <-- Redireccionamos a GOOGLE.
+	//$("#processing").html("Procesando, espere por favor...");
+	},
+	success:  function (response)
+	{
+		var value="";
+		notificacion("Dispositivo Creado Exitosamente");
+		$("#valor1").val(value);
+		$("#valor2").val(value);
+		$("#Hash").val(value);
+	},
+	error:	function(response)
+	{
+		var value="";
+                error("Dispositivo No fue Creado Exitosamente");
+                $("#valor1").val(value);
+                $("#valor2").val(value);
+		$("#Hash").val(value);
+	}
 	});
 }
 
@@ -78,21 +93,23 @@ function calculaHash()
 //var parametros = {"valorCaja1" : valorCaja1,
 //                  "valorCaja2" : valorCaja2
 //                 };
-                 $.ajax({
-		 		//data:  parametros,
-		 		//data:  ""
-                                url:   '../../ejemplo_ajax_proceso.php',
-                                type:  'post',
-                                beforeSend: function ()
-                                {
-                                        $("#Hash").html("Procesando, espere por favor...");
-                                },
-                                success:  function (response)
-                                {
-					//$("#Hash").html(response);
-					$("#Hash").val(response);
-                                }
-                        });
+$.ajax({
+//data:  parametros,
+//data:  ""
+url:   'createHash.php',
+type:  'post',
+beforeSend: function ()
+{
+//notificacion();
+//$("#Hash").html("Procesando, espere por favor...");
+},
+success:  function (response)
+{
+notificacion("Token Creado Exitosamente");
+//$("#Hash").html(response);
+$("#Hash").val(response);
+}
+});
 }
 </script>
 </head>
@@ -394,22 +411,23 @@ function calculaHash()
   <div class="register-box-body">
     <form action="createDevice.php" method="post">
       <div class="form-group has-feedback">
-        <input type="text" class="form-control" placeholder="ID Nombre Dispositivo" name="paramDeviceId">
+        <input id="valor1" type="text" class="form-control" placeholder="ID Nombre Dispositivo" name="paramDeviceId">
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="text" class="form-control" placeholder="Descripción" name="paramDescription">
+        <input id="valor2" type="text" class="form-control" placeholder="Descripción" name="paramDescription">
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-	<input id="Hash" type="text" class="form-control" placeholder="Token" name="paramPassword">
+	<input id="Hash" type="text" class="form-control" placeholder="Token" name="paramToken">
 	<span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
       <div class="row">
 	<!-- /.col -->
         <div class="col-xs-4">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">Agregar</button>
+<!--	  <button type="submit" class="btn btn-primary btn-block btn-flat">Agregar</button> -->
+           <input class="btn btn-primary btn-block btn-flat" type="button" href="javascript:;" onclick="creaDevice($('#valor1').val(),$('#valor2').val(),$('#Hash').val());return false;" value="Crear Dispositivo"/>
         </div>
         <!-- /.col -->
       </div>
@@ -418,11 +436,6 @@ function calculaHash()
 	<div class="col-xs-4">
 	  <input class="btn btn-primary btn-block btn-flat" type="button" href="javascript:;" onclick="calculaHash();return false;" value="Generar Token"/>
 	</div>
-
-        <div class="col-xs-4">
-	  <input type="button" href="javascript:;" value="Notificacion error" onClick="alerta();" />
-        </div>
-
         <!-- /.box-body -->
         <div class="box-footer">
           <!--Footer-->
