@@ -3,7 +3,7 @@ session_start();
 if($_SESSION['mail'] == true){
 
 }else{
-header("Location: ../../../index.php");
+header("Location: index.php");
 exit();
 }
 
@@ -11,11 +11,11 @@ $now = time();
 
 if($now > $_SESSION['expire']){
 session_destroy();
-header("Location: ../../../pages/examples/lockscreen.php");
+header("Location: lockscreen.php");
 exit();
 }
 
-include("../../conectar.php");
+include("conectar.php");
 $con = conex();
 
 $consulta = consulta_sql($con,"SELECT nombres,empresa,fecha,foto FROM users WHERE mail='".$_SESSION['mail']."'");
@@ -26,26 +26,6 @@ $row = mysqli_fetch_array($consulta, MYSQLI_NUM);
 //{
 //GeraHash(12);
 //}
-function GeraHash($qtd){
-//Under the string $Caracteres you write all the characters you want to be used to randomly generate the code. 
-$Caracteres = 'ABCDEFGHIJKLMOPQRSTUVXWYZ0123456789!"#$%&/()=*[]:;abcd3fghijklmnopqrstuvwxyz'; 
-$QuantidadeCaracteres = strlen($Caracteres); 
-$QuantidadeCaracteres--; 
-
-$Hash=NULL; 
-for($x=1;$x<=$qtd;$x++){ 
-$Posicao = rand(0,$QuantidadeCaracteres); 
-$Hash .= substr($Caracteres,$Posicao,1); 
-}
-return $Hash;
-} 
-//Here you specify how many characters the returning string must have 
-//echo GeraHash(30); 
-
-function device(){
-shell_exec('');
-}
-
 ?>
 
 <html>
@@ -77,6 +57,32 @@ shell_exec('');
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
+<script type="text/javascript" src="/js/jquery.js"></script>
+
+<script>
+function calculaHash()
+{
+//var parametros = {"valorCaja1" : valorCaja1,
+//                  "valorCaja2" : valorCaja2
+//                 };
+                 $.ajax({
+		 		//data:  parametros,
+		 		//data:  ""
+                                url:   '../../ejemplo_ajax_proceso.php',
+                                type:  'post',
+                                beforeSend: function ()
+                                {
+                                        $("#Hash").html("Procesando, espere por favor...");
+                                },
+                                success:  function (response)
+                                {
+					//$("#Hash").html(response);
+					$("#Hash").val(response);
+                                }
+                        });
+}
+</script>
+
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
 <div class="wrapper">
@@ -87,7 +93,7 @@ shell_exec('');
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>A</b>LT</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>IoT</b>Gotland Group</span>
+      <span class="logo-lg"><b>IoT</b> Gotland Group</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -115,7 +121,7 @@ shell_exec('');
                   <li><!-- start message -->
                     <a href="#">
                       <div class="pull-left">
-		      <img src="../../fotos/jose.jpg" class="img-circle" alt="User Image">
+		      <img src="fotos/<?php echo $row[3];  ?>" class="img-circle" alt="User Image">
                       </div>
                       <h4>
                         Support Team
@@ -187,17 +193,17 @@ shell_exec('');
           <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-	    <img src="../../../fotos/<?php $row[3] ?>" class="user-image" alt="User Image">
-	      <span class="hidden-xs"><?php echo $row[0]." ".$row[1] ?></span>
+	    <img src="fotos/<?php echo $row[3]; ?>" class="user-image" alt="User Image">
+	      <span class="hidden-xs"><?php echo $row[0]; ?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
-	      <img src="../../../fotos/<?php $row[3]; ?>" class="img-circle" alt="User Image">
+	      <img src="fotos/<?php echo $row[3]; ?>" class="img-circle" alt="User Image">
 
                 <p>
-		<?php echo $row[0]." ".$row[1]." - ".$row[2] ?>
-		<small><?php echo "Miembro desde ".$row[3] ?></small>
+		<?php echo $row[0] ?>
+		<small><?php echo "Miembro desde ".$row[2] ?></small>
                 </p>
               </li>
               <!-- Menu Body -->
@@ -221,7 +227,7 @@ shell_exec('');
                   <a href="#" class="btn btn-default btn-flat">Perfil</a>
                 </div>
                 <div class="pull-right">
-                  <a href="../../../logout.php" class="btn btn-default btn-flat">Salir</a>
+                  <a href="logout.php" class="btn btn-default btn-flat">Salir</a>
                 </div>
               </li>
             </ul>
@@ -244,10 +250,10 @@ shell_exec('');
       <!-- Sidebar user panel -->
       <div class="user-panel">
         <div class="pull-left image">
-	<img src="../../../fotos/"<?php $row[3]; ?> class="img-circle" alt="User Image">
+	<img src="fotos/<?php echo $row[3]; ?>" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-	<p><?php echo $row[0]." ".$row[1]; ?></p>
+	<p><?php echo $row[0]; ?></p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
@@ -372,7 +378,7 @@ shell_exec('');
     <a href="#"><b></b>Nuevo Dispositivo</a>
   </div>
   <div class="register-box-body">
-    <form action="../../../createDevice.php" method="post">
+    <form action="createDevice.php" method="post">
       <div class="form-group has-feedback">
         <input type="text" class="form-control" placeholder="ID Nombre Dispositivo" name="paramDeviceId">
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
@@ -382,8 +388,8 @@ shell_exec('');
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-      <input value="<?php echo $random = GeraHash(12)?>" type="text" class="form-control" placeholder="Generación de Token" name="paramToken">
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+	<input id="Hash" type="text" class="form-control" placeholder="Token" name="paramPassword">
+	<span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
       <div class="row">
@@ -396,16 +402,10 @@ shell_exec('');
     </form>
 	<br>
 	<form class="" method="post" name="form1">
-        <div class="col-xs-4">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">Generar Token</button>
+	<div class="col-xs-4">
+	  <input class="btn btn-primary btn-block btn-flat" type="button" href="javascript:;" onclick="calculaHash();return false;" value="Generar Token"/>
 	</div>
 	</form>
-
-<form action="../../../parameterDevice.php" method="post">
-    <button name="foo" value="upvote">Encender</button>
-</form>
-
-</div>
         </div>
         <!-- /.box-body -->
         <div class="box-footer">
@@ -414,11 +414,8 @@ shell_exec('');
         <!-- /.box-footer-->
       </div>
       <!-- /.box -->
-
     </section>
     <!-- /.content -->
-
-
 
     <!-- Main content -->
       <!-- Default box -->
@@ -483,11 +480,6 @@ shell_exec('');
             </div>
             <!-- /.box-body -->
     </section>
-
-
-
-
-
   </div>
 
   <!-- /.content-wrapper -->
