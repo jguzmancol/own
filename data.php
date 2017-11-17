@@ -5,7 +5,7 @@ include("conectar.php");
 
 $con = conex();
 
-$consulta1 = consulta_sql($con,"SELECT user,nombres,empresa,foto,rol FROM users WHERE mail='".$_SESSION['mail']."'");
+$consulta1 = consulta_sql($con,"SELECT user,nombres,empresa,foto,rol,fecha FROM users WHERE mail='".$_SESSION['mail']."'");
 
 $row1 = mysqli_fetch_array($consulta1, MYSQLI_NUM);
 
@@ -14,7 +14,6 @@ $consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as no
 }else{
 $consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as nombres, users.empresa as empresa, devices.device as dispositivo, devices.description as descripcion, devices.fecha as fecha_registro, devices.password as password  from users, devices where users.usersid=devices.usersid and users.mail='".$_SESSION['mail']."'");
 }
-#$row = mysqli_fetch_row($consulta, MYSQLI_NUM);
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +21,7 @@ $consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as no
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 2 | Data Tables</title>
+  <title>IoT Gotland Group | Administración de Dispositivos</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -274,38 +273,24 @@ $consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as no
           <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="../../dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs">Alexander Pierce</span>
+	    <img src="fotos/<?php echo $row1[3]; ?>" class="user-image" alt="User Image">
+	    <span class="hidden-xs"><?php echo $row1[1]; ?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
-                <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+	      <img src="fotos/<?php echo $row1[3]; ?>" class="img-circle" alt="User Image">
 
                 <p>
-                  Alexander Pierce - Web Developer
-                  <small>Member since Nov. 2012</small>
+		<?php echo $row1[1]; ?>
+		<small><?php echo "Miembro desde ".$row1[5];  ?></small>
                 </p>
               </li>
               <!-- Menu Body -->
-              <li class="user-body">
-                <div class="row">
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Followers</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Sales</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Friends</a>
-                  </div>
-                </div>
-                <!-- /.row -->
-              </li>
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
+                  <a href="#" class="btn btn-default btn-flat">Perfil</a>
                 </div>
                 <div class="pull-right">
                   <a href="logout.php" class="btn btn-default btn-flat">Salir</a>
@@ -328,10 +313,10 @@ $consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as no
       <!-- Sidebar user panel -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+	<img src="fotos/<?php echo $row1[3]; ?>" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>Alexander Pierce</p>
+	<p><?php echo $row1[1]; ?></p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
@@ -361,7 +346,7 @@ $consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as no
           </ul>
         </li>
 <?php
-if($row[4]=="admin")
+if($row1[4]=="admin")
 {
 ?>
         <li class="treeview">
@@ -443,8 +428,8 @@ if($row[4]=="admin")
                 </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="simple.html"><i class="fa fa-circle-o"></i> Simple tables</a></li>
-            <li class="active"><a href="data.php"><i class="fa fa-circle-o"></i> Data tables</a></li>
+            <li><a href="simple.html"><i class="fa fa-circle-o"></i> Estadisticas</a></li>
+            <li class="active"><a href="data.php"><i class="fa fa-circle-o"></i> Listado de Dispositivos</a></li>
           </ul>
         </li>
   </aside>

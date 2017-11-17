@@ -5,7 +5,7 @@ include("conectar.php");
 
 $con = conex();
 
-$consulta = consulta_sql($con,"SELECT user,nombres,empresa,foto,rol FROM users WHERE mail='".$_SESSION['mail']."'");
+$consulta = consulta_sql($con,"SELECT user,nombres,empresa,foto,rol,fecha FROM users WHERE mail='".$_SESSION['mail']."'");
 
 $row = mysqli_fetch_array($consulta, MYSQLI_NUM);
 ?>
@@ -240,25 +240,11 @@ $("#Hash").val(response);
 	      <img src="fotos/<?php echo $row[3]; ?>" class="img-circle" alt="User Image">
 
                 <p>
-		<?php echo $row[0] ?>
-		<small><?php echo "Miembro desde ".$row[2] ?></small>
+		<?php echo $row[1]." - Rol: ".$row[4] ?>
+		<small><?php echo "Miembro desde ".$row[5] ?></small>
                 </p>
               </li>
               <!-- Menu Body -->
-              <li class="user-body">
-                <div class="row">
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Followers</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Sales</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Friends</a>
-                  </div>
-                </div>
-                <!-- /.row -->
-              </li>
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
@@ -291,7 +277,7 @@ $("#Hash").val(response);
 	<img src="fotos/<?php echo $row[3]; ?>" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-	<p><?php echo $row[0]; ?></p>
+	<p><?php echo $row[1]; ?></p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
@@ -300,19 +286,33 @@ $("#Hash").val(response);
         <li class="header">MAIN NAVIGATION</li>
         <li class="treeview">
           <a href="#">
-            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+            <i class="fa fa-cubes"></i> <span>Dispositivos</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="blank.php"><i class="fa fa-circle-o"></i> Dashboard</a></li>
+            <li><a href="blank.php"><i class="fa fa-tasks"></i> Nuevo Dispositivo</a></li>
+            <li><a href="data.php"><i class="fa fa-rss "></i> Listado de Dispositivos</a></li>
+            <li><a href="simple.html"><i class="fa fa-bar-chart"></i> Estadisticas</a></li>
           </ul>
-        </li>
+	</li>
+
 <?php
 if($row[4]=="admin")
 {
 ?>
+       <li class="treeview">
+          <a href="#">
+            <i class="fa fa-user"></i> <span>Registro Clientes</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="register.php"><i class="fa fa-user-plus"></i> Registrar</a></li>
+          </ul>
+        </li>
         <li class="treeview">
           <a href="#">
             <i class="fa fa-files-o"></i>
@@ -376,36 +376,6 @@ if($row[4]=="admin")
 <?php
 }
 ?>
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-table"></i> <span>Dispositivos</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="simple.html"><i class="fa fa-circle-o"></i> Simple tables</a></li>
-            <li><a href="data.php"><i class="fa fa-circle-o"></i> Data tables</a></li>
-          </ul>
-        </li>
-<?php
-if($row[4]=="admin")
-{
-?>
-       <li class="treeview">
-          <a href="#">
-            <i class="fa fa-table"></i> <span>Registro Clientes</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="register.php"><i class="fa fa-circle-o"></i> Registrar</a></li>
-          </ul>
-        </li>
-<?php
-}
-?>
     </section>
     <!-- /.sidebar -->
   </aside>
@@ -438,7 +408,7 @@ if($row[4]=="admin")
       </div>
       <div class="form-group has-feedback">
         <input id="valor2" type="text" class="form-control" placeholder="Descripción" name="paramDescription">
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+        <span class="fa fa-lock form-control-feedback"></span>
       </div>
 	<div class="input-group">
                 <div class="input-group-btn">
