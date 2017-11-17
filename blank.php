@@ -56,10 +56,23 @@ $row = mysqli_fetch_array($consulta, MYSQLI_NUM);
 
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-</head>
 <script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="js/alertify.js"></script>
+<link rel="stylesheet" href="themes/alertify.core.css" />
+<link rel="stylesheet" href="themes/alertify.default.css" />
 
 <script>
+
+function alerta()
+{
+	//un alert
+	alertify.alert("<b>Blog Reaccion Estudio</b> probando Alertify", function () 
+	{
+		//aqui introducimos lo que haremos tras cerrar la alerta.
+		//por ejemplo -->  location.href = 'http://www.google.es/';  <-- Redireccionamos a GOOGLE.
+	});
+}
+
 function calculaHash()
 {
 //var parametros = {"valorCaja1" : valorCaja1,
@@ -82,6 +95,7 @@ function calculaHash()
                         });
 }
 </script>
+</head>
 
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
@@ -401,12 +415,14 @@ function calculaHash()
       </div>
     </form>
 	<br>
-	<form class="" method="post" name="form1">
 	<div class="col-xs-4">
 	  <input class="btn btn-primary btn-block btn-flat" type="button" href="javascript:;" onclick="calculaHash();return false;" value="Generar Token"/>
 	</div>
-	</form>
+
+        <div class="col-xs-4">
+	  <input type="button" href="javascript:;" value="Notificacion error" onClick="alerta();" />
         </div>
+
         <!-- /.box-body -->
         <div class="box-footer">
           <!--Footer-->
