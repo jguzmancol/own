@@ -1,20 +1,27 @@
 <?php
 session_start();
-include('valida_session.php');
+include("valida_session.php");
 include("conectar.php");
 
 $con = conex();
 
-$consulta = consulta_sql($con,"SELECT user,nombres,empresa,foto FROM users WHERE mail='".$_SESSION['mail']."'");
+$consulta1 = consulta_sql($con,"SELECT user,nombres,empresa,foto,rol,fecha,password FROM users WHERE mail='".$_SESSION['mail']."'");
 
-$row = mysqli_fetch_array($consulta, MYSQLI_NUM);
+$row1 = mysqli_fetch_array($consulta1, MYSQLI_NUM);
+
+if($row1[4]=="admin"){
+$consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as nombres, users.empresa as empresa, devices.device as dispositivo, devices.description as descripcion, devices.fecha as fecha_registro, devices.password as password, users.rol, devices.devicesid from users, devices where users.usersid=devices.usersid");
+}else{
+$consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as nombres, users.empresa as empresa, devices.device as dispositivo, devices.description as descripcion, devices.fecha as fecha_registro, devices.password as password  from users, devices where users.usersid=devices.usersid and users.mail='".$_SESSION['mail']."'");
+}
 ?>
 
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>IoT | Gotland Group</title>
+  <title>IoT Gotland Group | Administración de Dispositivos</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -23,6 +30,8 @@ $row = mysqli_fetch_array($consulta, MYSQLI_NUM);
   <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
   <!-- Ionicons -->
   <link rel="stylesheet" href="../../bower_components/Ionicons/css/ionicons.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="../../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="../../dist/css/AdminLTE.min.css">
   <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -37,101 +46,19 @@ $row = mysqli_fetch_array($consulta, MYSQLI_NUM);
   <![endif]-->
 
   <!-- Google Font -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-<script type="text/javascript" src="/js/jquery.js"></script>
-<script type="text/javascript" src="js/alertify.js"></script>
-<link rel="stylesheet" href="themes/alertify.core.css" />
-<link rel="stylesheet" href="themes/alertify.default.css" />
-
-<script>
-
-function notificacion(mensaje){
-alertify.success(mensaje); 
-return false;
-}
-
-function error(mensaje){
-alertify.error(mensaje); 
-return false;
-}
-
-//function alerta(mensaje){
-//un alert
-//alertify.alert(mensaje), function () {
-//aqui introducimos lo que haremos tras cerrar la alerta.
-//por ejemplo -->  location.href = 'http://www.google.es/';  <-- Redireccionamos a GOOGLE.
-//});}
-
-function creaDevice(valor1,valor2,valor3)
-{
-	var parametros = {"paramDeviceId" : valor1,
-			  "paramDescription" : valor2,
-			  "paramToken": valor3
-	                 };
-	$.ajax({
-	data:  parametros,
-	url:   'createDevice.php',
-	type:  'post',
-	beforeSend: function ()
-	{
-	//$("#processing").html("Procesando, espere por favor...");
-	},
-	success:  function (ok)
-	{
-		var value="";
-		notificacion(ok);
-		$("#valor1").val(value);
-		$("#valor2").val(value);
-		$("#Hash").val(value);
-	},
-	error:	function(error)
-	{
-		var value="";
-                error(error);
-                $("#valor1").val(value);
-                $("#valor2").val(value);
-		$("#Hash").val(value);
-	}
-	});
-}
-
-function calculaHash()
-{
-//var parametros = {"valorCaja1" : valorCaja1,
-//                  "valorCaja2" : valorCaja2
-//                 };
-$.ajax({
-//data:  parametros,
-//data:  ""
-url:   'createHash.php',
-type:  'post',
-beforeSend: function ()
-{
-//notificacion();
-//$("#Hash").html("Procesando, espere por favor...");
-},
-success:  function (response)
-{
-notificacion("Token Creado Exitosamente");
-//$("#Hash").html(response);
-$("#Hash").val(response);
-}
-});
-}
-</script>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-
 <body class="hold-transition skin-blue sidebar-mini">
-<!-- Site wrapper -->
 <div class="wrapper">
 
   <header class="main-header">
     <!-- Logo -->
-    <a href="../../index2.html" class="logo">
+    <a href="http://www.gotlandgroup.com" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>A</b>LT</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>IoT</b> Gotland Group</span>
+      <span class="logo-lg"><b>IoT</b>Gotland Group</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -149,17 +76,17 @@ $("#Hash").val(response);
           <li class="dropdown messages-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-envelope-o"></i>
-              <span class="label label-success">0</span>
+              <span class="label label-success">4</span>
             </a>
             <ul class="dropdown-menu">
-              <li class="header">You have no messages</li>
+              <li class="header">You have 4 messages</li>
               <li>
                 <!-- inner menu: contains the actual data -->
                 <ul class="menu">
                   <li><!-- start message -->
                     <a href="#">
                       <div class="pull-left">
-		      <img src="fotos/<?php echo $row[3];  ?>" class="img-circle" alt="User Image">
+                        <img src="fotos/<?php echo $row1[3]; ?>" class="img-circle" alt="User Image">
                       </div>
                       <h4>
                         Support Team
@@ -169,6 +96,54 @@ $("#Hash").val(response);
                     </a>
                   </li>
                   <!-- end message -->
+                  <li>
+                    <a href="#">
+                      <div class="pull-left">
+                        <img src="../../dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
+                      </div>
+                      <h4>
+                        AdminLTE Design Team
+                        <small><i class="fa fa-clock-o"></i> 2 hours</small>
+                      </h4>
+                      <p>Why not buy a new awesome theme?</p>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <div class="pull-left">
+                        <img src="../../dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
+                      </div>
+                      <h4>
+                        Developers
+                        <small><i class="fa fa-clock-o"></i> Today</small>
+                      </h4>
+                      <p>Why not buy a new awesome theme?</p>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <div class="pull-left">
+                        <img src="../../dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
+                      </div>
+                      <h4>
+                        Sales Department
+                        <small><i class="fa fa-clock-o"></i> Yesterday</small>
+                      </h4>
+                      <p>Why not buy a new awesome theme?</p>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <div class="pull-left">
+                        <img src="../../dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
+                      </div>
+                      <h4>
+                        Reviewers
+                        <small><i class="fa fa-clock-o"></i> 2 days</small>
+                      </h4>
+                      <p>Why not buy a new awesome theme?</p>
+                    </a>
+                  </li>
                 </ul>
               </li>
               <li class="footer"><a href="#">See All Messages</a></li>
@@ -178,16 +153,38 @@ $("#Hash").val(response);
           <li class="dropdown notifications-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-bell-o"></i>
-              <span class="label label-warning">0</span>
+              <span class="label label-warning">10</span>
             </a>
             <ul class="dropdown-menu">
-              <li class="header">You have not notifications</li>
+              <li class="header">You have 10 notifications</li>
               <li>
                 <!-- inner menu: contains the actual data -->
                 <ul class="menu">
                   <li>
                     <a href="#">
                       <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the
+                      page and may cause design problems
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <i class="fa fa-users text-red"></i> 5 new members joined
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="#">
+                      <i class="fa fa-shopping-cart text-green"></i> 25 sales made
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <i class="fa fa-user text-red"></i> You changed your username
                     </a>
                   </li>
                 </ul>
@@ -199,10 +196,10 @@ $("#Hash").val(response);
           <li class="dropdown tasks-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-flag-o"></i>
-              <span class="label label-danger">0</span>
+              <span class="label label-danger">9</span>
             </a>
             <ul class="dropdown-menu">
-              <li class="header">You have 0 tasks</li>
+              <li class="header">You have 9 tasks</li>
               <li>
                 <!-- inner menu: contains the actual data -->
                 <ul class="menu">
@@ -221,6 +218,51 @@ $("#Hash").val(response);
                     </a>
                   </li>
                   <!-- end task item -->
+                  <li><!-- Task item -->
+                    <a href="#">
+                      <h3>
+                        Create a nice theme
+                        <small class="pull-right">40%</small>
+                      </h3>
+                      <div class="progress xs">
+                        <div class="progress-bar progress-bar-green" style="width: 40%" role="progressbar"
+                             aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                          <span class="sr-only">40% Complete</span>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+                  <!-- end task item -->
+                  <li><!-- Task item -->
+                    <a href="#">
+                      <h3>
+                        Some task I need to do
+                        <small class="pull-right">60%</small>
+                      </h3>
+                      <div class="progress xs">
+                        <div class="progress-bar progress-bar-red" style="width: 60%" role="progressbar"
+                             aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                          <span class="sr-only">60% Complete</span>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+                  <!-- end task item -->
+                  <li><!-- Task item -->
+                    <a href="#">
+                      <h3>
+                        Make beautiful transitions
+                        <small class="pull-right">80%</small>
+                      </h3>
+                      <div class="progress xs">
+                        <div class="progress-bar progress-bar-yellow" style="width: 80%" role="progressbar"
+                             aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                          <span class="sr-only">80% Complete</span>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+                  <!-- end task item -->
                 </ul>
               </li>
               <li class="footer">
@@ -231,34 +273,20 @@ $("#Hash").val(response);
           <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-	    <img src="fotos/<?php echo $row[3]; ?>" class="user-image" alt="User Image">
-	      <span class="hidden-xs"><?php echo $row[0]; ?></span>
+	    <img src="fotos/<?php echo $row1[3]; ?>" class="user-image" alt="User Image">
+	    <span class="hidden-xs"><?php echo $row1[0]; ?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
-	      <img src="fotos/<?php echo $row[3]; ?>" class="img-circle" alt="User Image">
+	      <img src="fotos/<?php echo $row1[3]; ?>" class="img-circle" alt="User Image">
 
                 <p>
-		<?php echo $row[0] ?>
-		<small><?php echo "Miembro desde ".$row[2] ?></small>
+		<?php echo $row1[1]; ?>
+		<small><?php echo "Miembro desde ".$row1[5];  ?></small>
                 </p>
               </li>
               <!-- Menu Body -->
-              <li class="user-body">
-                <div class="row">
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Followers</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Sales</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Friends</a>
-                  </div>
-                </div>
-                <!-- /.row -->
-              </li>
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
@@ -278,35 +306,60 @@ $("#Hash").val(response);
       </div>
     </nav>
   </header>
-
-  <!-- =============================================== -->
-
-  <!-- Left side column. contains the sidebar -->
+  <!-- Left side column. contains the logo and sidebar -->
   <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
       <!-- Sidebar user panel -->
       <div class="user-panel">
         <div class="pull-left image">
-	<img src="fotos/<?php echo $row[3]; ?>" class="img-circle" alt="User Image">
+	<img src="fotos/<?php echo $row1[3]; ?>" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-	<p><?php echo $row[0]; ?></p>
+	<p><?php echo $row1[1]; ?></p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
+      <!-- search form -->
+      <form action="#" method="get" class="sidebar-form">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Search...">
+          <span class="input-group-btn">
+                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                </button>
+              </span>
+        </div>
+      </form>
+      <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
         <li class="treeview">
           <a href="#">
-            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+            <i class="fa fa-cubes"></i> <span>Dispositivos</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="blank.php"><i class="fa fa-circle-o"></i> Dashboard</a></li>
+            <li><a href="blank.php"><i class="fa fa-tasks"></i> Nuevo Dispositivo</a></li>
+            <li><a href="data.php"><i class="fa fa-rss "></i> Listado de Dispositivos</a></li>
+            <li><a href="simple.html"><i class="fa fa-bar-chart"></i> Estadisticas</a></li>
+          </ul>
+        </li>
+<?php
+if($row1[4]=="admin")
+{
+?>
+       <li class="treeview">
+          <a href="#">
+            <i class="fa fa-user"></i> <span>Registro Clientes</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="register.php"><i class="fa fa-user-plus"></i> Registrar</a></li>
           </ul>
         </li>
         <li class="treeview">
@@ -316,21 +369,29 @@ $("#Hash").val(response);
             <span class="pull-right-container">
               <span class="label label-primary pull-right">4</span>
             </span>
-	  </a>
-	   <ul class="treeview-menu">
-	    <li><a href="../layout/top-nav.html"><i class="fa fa-circle-o"></i> Top Navigation</a></li>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="../layout/top-nav.html"><i class="fa fa-circle-o"></i> Top Navigation</a></li>
             <li><a href="../layout/boxed.html"><i class="fa fa-circle-o"></i> Boxed</a></li>
             <li><a href="../layout/fixed.html"><i class="fa fa-circle-o"></i> Fixed</a></li>
             <li><a href="../layout/collapsed-sidebar.html"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
           </ul>
+        </li>
+        <li>
+          <a href="../widgets.html">
+            <i class="fa fa-th"></i> <span>Widgets</span>
+            <span class="pull-right-container">
+              <small class="label pull-right bg-green">new</small>
+            </span>
+          </a>
         </li>
         <li class="treeview">
           <a href="#">
             <i class="fa fa-pie-chart"></i>
             <span>Charts</span>
             <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
           </a>
           <ul class="treeview-menu">
             <li><a href="../charts/chartjs.html"><i class="fa fa-circle-o"></i> ChartJS</a></li>
@@ -344,8 +405,8 @@ $("#Hash").val(response);
             <i class="fa fa-laptop"></i>
             <span>UI Elements</span>
             <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
           </a>
           <ul class="treeview-menu">
             <li><a href="../UI/general.html"><i class="fa fa-circle-o"></i> General</a></li>
@@ -360,8 +421,8 @@ $("#Hash").val(response);
           <a href="#">
             <i class="fa fa-edit"></i> <span>Forms</span>
             <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
           </a>
           <ul class="treeview-menu">
             <li><a href="../forms/general.html"><i class="fa fa-circle-o"></i> General Elements</a></li>
@@ -369,84 +430,90 @@ $("#Hash").val(response);
             <li><a href="../forms/editors.html"><i class="fa fa-circle-o"></i> Editors</a></li>
           </ul>
         </li>
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-table"></i> <span>Dispositivos</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="simple.html"><i class="fa fa-circle-o"></i> Simple tables</a></li>
-            <li><a href="data.php"><i class="fa fa-circle-o"></i> Data tables</a></li>
-          </ul>
-        </li>
-    </section>
-    <!-- /.sidebar -->
+<?php
+}
+?>
   </aside>
-
-  <!-- =============================================== -->
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Administracion de Sistema
-        <small><!-- MENSAJE  --></small>
+        Tabla de Datos
+        <small>Informe Avanzado</small>
       </h1>
-    <!-- Main content -->
-    <section class="content">
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="#">Tables</a></li>
+        <li class="active">Data tables</li>
+      </ol>
+    </section>
 
-      <!-- Default box -->
-        <div class="box-body">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Informe de Dispositvos Creados</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="example1"  class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>Usuario</th>
+                  <th>Nombres</th>
+                  <th>Empresa</th>
+                  <th>Nombre Dispositivo</th>
+                  <th>Descripcion</th>
+		  <th>Fecha Registro</th>
+		  <th>Password</th>
+		  <th>On</th>
+		  <th>Off</th>
+                </tr>
+                </thead>
+                <tbody>
+<?php
+$value_on="On";
+$value_off="Off";
+while($fila=mysqli_fetch_array($consulta, MYSQLI_NUM))
+{
+	$_value_on="On";
+	$_value_off="Off";
+?>
+                <tr>
+		  <td><?php echo $fila[0]; ?></td>
+		  <td><?php echo $fila[1]; ?></td>
+		  <td><?php echo $fila[2]; ?></td>
+		  <td><?php echo $fila[3]; ?></td>
+		  <td><?php echo $fila[4]; ?></td>
+		  <td><?php echo $fila[5]; ?></td>
+		  <td><?php echo $fila[6]; ?></td>
+		  <td id="<?php echo $fila[8]." On"?>">
+		  <input type="checkbox" checked data-toggle="toggle">
+		  </td>
 
-<div class="register-box">
-  <div class="register-logo">
-    <a href="#"><b></b>Nuevo Dispositivo</a>
-  </div>
-  <div class="register-box-body">
-    <form action="" method="post">
-      <div class="form-group has-feedback">
-        <input id="valor1" type="text" class="form-control" placeholder="ID Nombre Dispositivo" name="paramDeviceId">
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
-      </div>
-      <div class="form-group has-feedback">
-        <input id="valor2" type="text" class="form-control" placeholder="Descripción" name="paramDescription">
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
-      </div>
-      <div class="form-group has-feedback">
-	<input id="Hash" type="text" class="form-control" placeholder="Token" name="paramToken">
-	<span class="glyphicon fa-key form-control-feedback"></span>
-      </div>
-      <div class="form-group has-feedback">
-      <div class="row">
-	<!-- /.col -->
-        <div class="col-xs-4">
-<!--	  <button type="submit" class="btn btn-primary btn-block btn-flat">Agregar</button> -->
-           <input class="btn btn-primary btn-block btn-flat" type="button" href="javascript:;" onclick="creaDevice($('#valor1').val(),$('#valor2').val(),$('#Hash').val());return false;" value="Crear Dispositivo"/>
+		  <td id="<?php echo $fila[8]." Off"?>">
+		  <input checked data-toogle="toogle" class="btn btn-danger btn-block btn-fat" type="checkbox" href="javascript:;" onclick="idtd();
+			return false;" 
+			value="<?php echo $_value_off ?>"/>
+		  </td>
+<?php
+}
+?>
+                </tbody>
+              </table>
+            </div>
+	    <!-- /.box-body -->
+	  <div class="box-footer">
+          </div>
+          <!-- /.box -->
         </div>
         <!-- /.col -->
       </div>
-    </form>
-	<br>
-	<div class="col-xs-4">
-	  <input class="btn btn-primary btn-block btn-fat" type="button" href="javascript:;" onclick="calculaHash();return false;" value="Generar Token"/>
-	</div>
-        <!-- /.box-body -->
-        <div class="box-footer">
-          <!--Footer-->
-        </div>
-        <!-- /.box-footer-->
-      </div>
-      <!-- /.box -->
+      <!-- /.row -->
     </section>
     <!-- /.content -->
-
   </div>
-
   <!-- /.content-wrapper -->
-
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
       <b>Version</b> 2.4.0
@@ -460,14 +527,13 @@ $("#Hash").val(response);
     <!-- Create the tabs -->
     <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
       <li><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
-
       <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
     </ul>
     <!-- Tab panes -->
     <div class="tab-content">
       <!-- Home tab content -->
       <div class="tab-pane" id="control-sidebar-home-tab">
-        <h3 class="control-sidebar-heading">Actividad Reciente</h3>
+        <h3 class="control-sidebar-heading">Recent Activity</h3>
         <ul class="control-sidebar-menu">
           <li>
             <a href="javascript:void(0)">
@@ -656,6 +722,9 @@ $("#Hash").val(response);
 <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="../../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="../../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <!-- SlimScroll -->
 <script src="../../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <!-- FastClick -->
@@ -664,10 +733,84 @@ $("#Hash").val(response);
 <script src="../../dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="../../dist/js/demo.js"></script>
+<!-- page script -->
 <script>
-  $(document).ready(function () {
-    $('.sidebar-menu').tree()
+  $(function () {
+    $('#example1').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
   })
 </script>
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+<script>
+//$(function() {
+//$('#toggle-one').bootstrapToggle();
+
+//})
+</script>
+
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="js/alertify.js"></script>
+<link rel="stylesheet" href="themes/alertify.core.css" />
+<link rel="stylesheet" href="themes/alertify.default.css" />
+
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("td").click(function() 
+	{
+		_ID = $(this).attr("id");
+		if(_ID){estadoDevice(_ID);}
+	});
+});
+</script>
+
+<script>
+function notificacion(mensaje){
+	alertify.success(mensaje);
+	return false;
+}
+
+function error(mensaje)
+{
+	alertify.error(mensaje);
+	return false;
+}
+
+function estadoDevice(valor1)
+{
+
+	var parametros = {"paramId" : valor1,};
+        $.ajax({
+
+	data:   parametros,
+		url:   'estadodevice.php',
+		type:  'post',
+		beforeSend: function ()
+		{
+			//notificacion(valor1);
+			//$("#processing").html("Procesando, espere por favor...");
+	        },
+                success:  function (ok)
+                {
+                      notificacion(ok);
+                },
+                error:  function(error)
+                {
+                      error(error);
+                }
+                });
+}
+</script>
+
 </body>
 </html>

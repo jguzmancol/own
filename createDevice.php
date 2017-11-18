@@ -36,7 +36,7 @@ $consulta1 = consulta_sql($con,"SELECT password FROM devices WHERE device='$_par
 
 $row_2 = mysqli_fetch_array($consulta1, MYSQLI_NUM);
 $_passwd = $row_2[0];
-shell_exec("./createInstanceMosquitto.sh $_valor1 $_passwd $_paramDeviceId");
+shell_exec("./createInstanceMosquitto.sh $_valor1 $_paramDevicePassword $_paramDeviceId");
 $ok="Dispositivo Creado Correctamente";
 echo $ok;
 }else{

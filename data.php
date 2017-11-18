@@ -50,7 +50,6 @@ $consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as no
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
-<div class="wrapper">
 
   <header class="main-header">
     <!-- Logo -->
@@ -320,17 +319,6 @@ $consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as no
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
-      <!-- search form -->
-      <form action="#" method="get" class="sidebar-form">
-        <div class="input-group">
-          <input type="text" name="q" class="form-control" placeholder="Search...">
-          <span class="input-group-btn">
-                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-                </button>
-              </span>
-        </div>
-      </form>
-      <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
@@ -466,8 +454,7 @@ if($row1[4]=="admin")
                   <th>Descripcion</th>
 		  <th>Fecha Registro</th>
 		  <th>Password</th>
-		  <th>On</th>
-		  <th>Off</th>
+		  <th>Estado</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -476,8 +463,6 @@ $value_on="On";
 $value_off="Off";
 while($fila=mysqli_fetch_array($consulta, MYSQLI_NUM))
 {
-	$_value_on="On";
-	$_value_off="Off";
 ?>
                 <tr>
 		  <td><?php echo $fila[0]; ?></td>
@@ -487,26 +472,18 @@ while($fila=mysqli_fetch_array($consulta, MYSQLI_NUM))
 		  <td><?php echo $fila[4]; ?></td>
 		  <td><?php echo $fila[5]; ?></td>
 		  <td><?php echo $fila[6]; ?></td>
-		  <td id="<?php echo $fila[8]." On"?>">
-		  <input class="btn btn-success btn-block btn-fat" type="button" href="javascript:;" onclick="idtd();
-                        return false;"
-                        value="<?php echo $_value_on ?>"/>
-		  </td>
-
-		  <td id="<?php echo $fila[8]." Off"?>">
-		  <input class="btn btn-danger btn-block btn-fat" type="button" href="javascript:;" onclick="idtd();
-			return false;" 
-			value="<?php echo $_value_off ?>"/>
+		  <td id="<?php echo $fila[8]?>">
+		  <input id="toggle-event" type="checkbox" data-toggle="toggle" data-size="mini">
 		  </td>
 <?php
 }
 ?>
                 </tbody>
-              </table>
+	      </table>
             </div>
 	    <!-- /.box-body -->
 	  <div class="box-footer">
-          </div>
+	  </div>
           <!-- /.box -->
         </div>
         <!-- /.col -->
@@ -750,23 +727,59 @@ while($fila=mysqli_fetch_array($consulta, MYSQLI_NUM))
   })
 </script>
 
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script type="text/javascript" src="js/alertify.js"></script>
 <link rel="stylesheet" href="themes/alertify.core.css" />
 <link rel="stylesheet" href="themes/alertify.default.css" />
 
 <script type="text/javascript">
-$(document).ready(function()
-{
-	$("td").click(function() {
-	_ID = $(this).attr("id");
-	//alert(_ID);
-	estadoDevice(_ID);
-	});
+
+$(document).ready(function() {
+	$("td").on("click", function() {
+	var condiciones = $("#toggle-event").is(":checked");
+	if (!condiciones) 
+	{
+		_ID = $(this).attr("id") + " On";
+		estadoDevice(_ID);
+		//alert("Debe aceptar las condiciones");
+		event.preventDefault();
+	}else{_ID = $(this).attr("id") + " Off";
+		estadoDevice(_ID);}
 });
+});
+
 </script>
 
 <script>
+
+function alerta(){
+//un alert
+alertify.alert("<b>Blog Reaccion Estudio</b> probando Alertify", function () {
+//aqui introducimos lo que haremos tras cerrar la alerta.
+//por ejemplo -->  location.href = 'http://www.google.es/';  <-- Redireccionamos a GOOGLE.
+});}
+
+function ok(){
+	alertify.success("Visita nuestro <a href=\"http://blog.reaccionestudio.com/\" style=\"color:white;\" target=\"_blank\"><b>BLOG.</b></a>");
+	return false;
+}
+
+function datos()
+{
+	//un prompt
+	alertify.prompt("Esto es un <b>prompt</b>, introduce un valor:", function (e, str) {
+	if (e){
+		alertify.success("Has pulsado '" + alertify.labels.ok + "'' e introducido: " + str);
+	}else{
+			alertify.error("Has pulsado '" + alertify.labels.cancel + "'");
+		}
+	});
+return false;
+}
+
 function notificacion(mensaje){
 	alertify.success(mensaje);
 	return false;
@@ -802,7 +815,7 @@ function estadoDevice(valor1)
                 }
                 });
 }
-</script>
 
+</script>
 </body>
 </html>

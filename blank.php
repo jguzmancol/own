@@ -45,6 +45,13 @@ $row = mysqli_fetch_array($consulta, MYSQLI_NUM);
 
 <script>
 
+function alerta(mensaje){
+	//un alert
+alertify.alert(mensaje, function () {
+	////aqui introducimos lo que haremos tras cerrar la alerta.
+	////por ejemplo -->  location.href = 'http://www.google.es/';  <-- Redireccionamos a GOOGLE.
+});}
+
 function notificacion(mensaje){
 alertify.success(mensaje); 
 return false;
@@ -79,7 +86,7 @@ function creaDevice(valor1,valor2,valor3)
 	success:  function (ok)
 	{
 		var value="";
-		notificacion(ok);
+		alerta(ok);
 		$("#valor1").val(value);
 		$("#valor2").val(value);
 		$("#Hash").val(value);
@@ -87,7 +94,7 @@ function creaDevice(valor1,valor2,valor3)
 	error:	function(error)
 	{
 		var value="";
-                error(error);
+                alerta(error);
                 $("#valor1").val(value);
                 $("#valor2").val(value);
 		$("#Hash").val(value);
