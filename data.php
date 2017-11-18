@@ -472,22 +472,32 @@ if($row1[4]=="admin")
                 </thead>
                 <tbody>
 <?php
+$value_on="On";
+$value_off="Off";
 while($fila=mysqli_fetch_array($consulta, MYSQLI_NUM))
 {
 	$_value_on="On";
 	$_value_off="Off";
 ?>
                 <tr>
-                  <td><?php echo $fila[0]; ?></td>
-                  <td><?php echo $fila[1]; ?></td>
-                  <td><?php echo $fila[2]; ?></td>
-                  <td><?php echo $fila[3]; ?></td>
-                  <td><?php echo $fila[4]; ?></td>
+		  <td><?php echo $fila[0]; ?></td>
+		  <td><?php echo $fila[1]; ?></td>
+		  <td><?php echo $fila[2]; ?></td>
+		  <td><?php echo $fila[3]; ?></td>
+		  <td><?php echo $fila[4]; ?></td>
 		  <td><?php echo $fila[5]; ?></td>
 		  <td><?php echo $fila[6]; ?></td>
-		  <td> <input class="btn btn-primary btn-block btn-fat" type="button" href="javascript:;" onclick="prendeDevice($('<?php echo $fila[0]; ?>').val(),$('<?php echo $row1[6] ?>').val(),$('<?php echo $fila[3]; ?>').val(),$('<?php echo $_value_on ?>').val());return false;" value="<?php echo $_value_on ?>"/></td>
+		  <td id="<?php echo $fila[8]." On"?>">
+		  <input class="btn btn-success btn-block btn-fat" type="button" href="javascript:;" onclick="idtd();
+                        return false;"
+                        value="<?php echo $_value_on ?>"/>
+		  </td>
 
-		  <td> <input class="btn btn-primary btn-block btn-fat" type="button" href="javascript:;" onclick="prendeDevice($('<?php echo $fila[0]; ?>').val(),$('<?php echo $row1[6] ?>').val(),$('<?php echo $fila[3]; ?>').val(),$('<?php echo $_value_off ?>').val());return false;" value="<?php echo $_value_off ?>"/></td>
+		  <td id="<?php echo $fila[8]." Off"?>">
+		  <input class="btn btn-danger btn-block btn-fat" type="button" href="javascript:;" onclick="idtd();
+			return false;" 
+			value="<?php echo $_value_off ?>"/>
+		  </td>
 <?php
 }
 ?>
@@ -740,50 +750,58 @@ while($fila=mysqli_fetch_array($consulta, MYSQLI_NUM))
   })
 </script>
 
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="js/alertify.js"></script>
+<link rel="stylesheet" href="themes/alertify.core.css" />
+<link rel="stylesheet" href="themes/alertify.default.css" />
+
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("td").click(function() {
+	_ID = $(this).attr("id");
+	//alert(_ID);
+	estadoDevice(_ID);
+	});
+});
+</script>
+
 <script>
-function creaDevice(valor1,valor2,valor3,valor4)
+function notificacion(mensaje){
+	alertify.success(mensaje);
+	return false;
+}
+
+function error(mensaje)
+{
+	alertify.error(mensaje);
+	return false;
+}
+
+function estadoDevice(valor1)
 {
 
-	var parametros = {"paramUser" : 	valor1,
-			  "paramPassword" : 	valor2,
-			  "paramDevice": 	valor3,
-			  "paramMessage: ":	valor4
-									                             };
+	var parametros = {"paramId" : valor1,};
         $.ajax({
 
-	data:  parametros,
-
+	data:   parametros,
 		url:   'estadodevice.php',
-
 		type:  'post',
-
 		beforeSend: function ()
-
 		{
-
-		$("#processing").html("Procesando, espere por favor...");
+			//notificacion(valor1);
+			//$("#processing").html("Procesando, espere por favor...");
 	        },
-
                 success:  function (ok)
                 {
-                      //var value="";
-                      //notificacion(ok);
-                      //$("#valor1").val(value);
-                      //$("#valor2").val(value);
-                      //$("#Hash").val(value);
+                      notificacion(ok);
                 },
-
                 error:  function(error)
                 {
-	              //var value="";
-                      //error(error);
-                      //$("#valor1").val(value);
-                      //$("#valor2").val(value);
-                      //$("#Hash").val(value);
+                      error(error);
                 }
                 });
-                }
-			
+}
 </script>
 
 </body>

@@ -64,9 +64,9 @@ return false;
 
 function creaDevice(valor1,valor2,valor3)
 {
-	var parametros = {"paramDeviceId" : valor1,
-			  "paramDescription" : valor2,
-			  "paramToken": valor3
+	var parametros = {"paramDeviceId"	: valor1,
+			  "paramDescription" 	: valor2,
+			  "paramToken"		: valor3
 	                 };
 	$.ajax({
 	data:  parametros,
