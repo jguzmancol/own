@@ -10,7 +10,7 @@ if($_SESSION['mail'] == true)
 
 $_paramDeviceId = $_POST['paramDeviceId'];
 $_paramDeviceDescription = $_POST['paramDescription'];
-$_paramDevicePassword = md5($_POST['paramToken']);
+$_paramDevicePassword = $_POST['paramToken'];
 
 $con=conex();
 
@@ -34,10 +34,9 @@ $consulta1 = consulta_sql($con,"SELECT password FROM devices WHERE device='$_par
 
 $row_2 = mysqli_fetch_array($consulta1, MYSQLI_NUM);
 $_passwd = $row_2[0];
-//shell_exec("/var/www/html/./createInstanceMosquitto.sh $_valor1 $_passwd $_paramDeviceId");
+shell_exec("./createInstanceMosquitto.sh $_valor1 $_passwd $_paramDeviceId");
 $ok="Dispositivo Creado Correctamente";
 echo $ok;
-//header("location: /pages/examples/blank.php"); 
 }else{
 	if($_paramDeviceId=="")
 	{
@@ -48,5 +47,4 @@ echo $ok;
 		echo $error;
 	     }
 }
-//else{header("location: /pages/examples/blank.php");}
 ?>
