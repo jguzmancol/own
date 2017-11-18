@@ -27,10 +27,10 @@ if($row[0]=="" || $row[1] =="")
 			header("location: index.php");
 
 		}else{
-			header("location: /pages/examples/register.php");
+			header("location: register.php");
 		     }
 		}
 }else{
-	header("location: /pages/examples/register.php");
+	header("location: register.php");
      }
 ?>

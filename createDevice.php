@@ -26,7 +26,7 @@ $consulta = consulta_sql($con,"SELECT device FROM devices WHERE device='$_paramD
 
 $row = mysqli_fetch_array($consulta, MYSQLI_NUM);
 
-if(!$row[0])
+if($row[0] != $_paramDeviceId)
 {
 $_query = insertData($con,"INSERT INTO devices VALUES(NULL,$_valor,'$_paramDeviceId','$_paramDeviceDescription','$_paramDevicePassword',$_timeStamp)");
 
@@ -35,9 +35,18 @@ $consulta1 = consulta_sql($con,"SELECT password FROM devices WHERE device='$_par
 $row_2 = mysqli_fetch_array($consulta1, MYSQLI_NUM);
 $_passwd = $row_2[0];
 //shell_exec("/var/www/html/./createInstanceMosquitto.sh $_valor1 $_passwd $_paramDeviceId");
-echo $response;
+$ok="Dispositivo Creado Correctamente";
+echo $ok;
 //header("location: /pages/examples/blank.php"); 
 }else{
-echo $response;
-}//else{header("location: /pages/examples/blank.php");}
+	if($_paramDeviceId=="")
+	{
+		$error="Device ID: El Nombre del Dispositivo no puede ser un dato vacio";
+		echo $error;
+	}else{
+		$error="Nombre de Dispositivo ya Creado";
+		echo $error;
+	     }
+}
+//else{header("location: /pages/examples/blank.php");}
 ?>

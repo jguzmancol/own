@@ -52,8 +52,15 @@ return false;
 
 function error(mensaje){
 alertify.error(mensaje); 
-return false; 
+return false;
 }
+
+//function alerta(mensaje){
+//un alert
+//alertify.alert(mensaje), function () {
+//aqui introducimos lo que haremos tras cerrar la alerta.
+//por ejemplo -->  location.href = 'http://www.google.es/';  <-- Redireccionamos a GOOGLE.
+//});}
 
 function creaDevice(valor1,valor2,valor3)
 {
@@ -69,18 +76,18 @@ function creaDevice(valor1,valor2,valor3)
 	{
 	//$("#processing").html("Procesando, espere por favor...");
 	},
-	success:  function (response)
+	success:  function (ok)
 	{
 		var value="";
-		notificacion("Dispositivo Creado Exitosamente");
+		notificacion(ok);
 		$("#valor1").val(value);
 		$("#valor2").val(value);
 		$("#Hash").val(value);
 	},
-	error:	function(response)
+	error:	function(error)
 	{
 		var value="";
-                error("Dispositivo No fue Creado Exitosamente");
+                error(error);
                 $("#valor1").val(value);
                 $("#valor2").val(value);
 		$("#Hash").val(value);

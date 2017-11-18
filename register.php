@@ -36,7 +36,7 @@
   <div class="register-box-body">
     <p class="login-box-msg">Registrar un nuevo miembro</p>
 
-    <form action="../../../callcreateUser.php" method="post">
+    <form action="callcreateUser.php" method="post">
       <div class="form-group has-feedback">
         <input type="text" class="form-control" placeholder="Nickname" name="paramNickname">
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
