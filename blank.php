@@ -416,7 +416,11 @@ $("#Hash").val(response);
     <a href="#"><b></b>Nuevo Dispositivo</a>
   </div>
   <div class="register-box-body">
+<<<<<<< HEAD
     <form action="" method="post">
+=======
+    <form action="createDevice.php" method="post">
+>>>>>>> 154326970ee5ee9eba0e7db85c6de9142ade8c6c
       <div class="form-group has-feedback">
         <input id="valor1" type="text" class="form-control" placeholder="ID Nombre Dispositivo" name="paramDeviceId">
         <span class="glyphicon glyphicon-user form-control-feedback"></span>

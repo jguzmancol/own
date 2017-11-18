@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
+=======
+<?php
+session_start();
+?>
+
+>>>>>>> 154326970ee5ee9eba0e7db85c6de9142ade8c6c
 <html>
 <head>
   <meta charset="utf-8">
@@ -36,6 +43,7 @@
   <div class="login-box-body">
     <p class="login-box-msg">Ingrese sus credenciales para iniciar sesión</p>
 
+<<<<<<< HEAD
     <form action="" method="post">
       <div class="form-group has-feedback">
         <input id="valor1" type="email" class="form-control" placeholder="Correo" name="email">
@@ -43,6 +51,15 @@
       </div>
       <div class="form-group has-feedback">
         <input id="valor2" type="password" class="form-control" placeholder="Contraseña" name="password">
+=======
+    <form action="valida.php" method="POST">
+      <div class="form-group has-feedback">
+        <input type="email" class="form-control" placeholder="Correo" name="email">
+        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input type="password" class="form-control" placeholder="Contraseña" name="password">
+>>>>>>> 154326970ee5ee9eba0e7db85c6de9142ade8c6c
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="row">
@@ -50,7 +67,11 @@
         </div>
         <!-- /.col -->
         <div class="col-xs-4">
+<<<<<<< HEAD
  <input class="btn btn-primary btn-block btn-flat" type="button" href="javascript:;" onclick="validar_usuario($('#valor1').val(),$('#valor2').val());return false;" value="Ingresar"/>
+=======
+          <button type="submit" value="enviar" class="btn btn-primary btn-block btn-flat">Ingresar</button>
+>>>>>>> 154326970ee5ee9eba0e7db85c6de9142ade8c6c
         </div>
         <!-- /.col -->
       </div>
@@ -72,11 +93,14 @@
 <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <!-- iCheck -->
 <script src="../../plugins/iCheck/icheck.min.js"></script>
+<<<<<<< HEAD
 
 <script type="text/javascript" src="js/alertify.js"></script>
 <link rel="stylesheet" href="themes/alertify.core.css" />
 <link rel="stylesheet" href="themes/alertify.default.css" />
 
+=======
+>>>>>>> 154326970ee5ee9eba0e7db85c6de9142ade8c6c
 <script>
   $(function () {
     $('input').iCheck({
@@ -86,6 +110,7 @@
     });
   });
 </script>
+<<<<<<< HEAD
 <script>
 
 function validar_usuario(valor1,valor2)
@@ -122,5 +147,7 @@ return false;
 
 </script>
 
+=======
+>>>>>>> 154326970ee5ee9eba0e7db85c6de9142ade8c6c
 </body>
 </html>
