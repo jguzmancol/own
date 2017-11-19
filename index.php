@@ -36,7 +36,7 @@
   <div class="login-box-body">
     <p class="login-box-msg">Ingrese sus credenciales para iniciar sesión</p>
 
-    <form action="" method="post">
+    <form action="" method="post" autocomplete="off">
       <div class="form-group has-feedback">
         <input id="valor1" type="email" class="form-control" placeholder="Correo" name="email">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
