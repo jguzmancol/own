@@ -1,5 +1,8 @@
 <?php
 function conex(){
+
+error_reporting(E_ALL ^ E_NOTICE);
+
 $conexion = mysqli_connect("localhost","jguzman","oracle10g578213A","iot");
 
 if (!$conexion) {

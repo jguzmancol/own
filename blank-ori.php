@@ -415,23 +415,25 @@ $("#Hash").val(response);
         <input id="valor2" type="text" class="form-control" placeholder="Descripción" name="paramDescription">
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
-	<div class="input-group">
-                <div class="input-group-btn">
-		<input class="btn btn-primary btn-block btn-fat" type="button" href="javascript:;" onclick="calculaHash();return false;" value="Generar Token"/>
-		</div>
-                <!-- /btn-group -->
-                <input id="Hash" type="text" class="form-control">
-              </div>
-	</div>
-      <div class="input-group">
-        <div class="input-group-btn">
-           <input class="btn btn-primary btn-block btn-fat" type="button" href="javascript:;" onclick="creaDevice($('#valor1').val(),$('#valor2').val(),$('#Hash').val());return false;" value="Crear Dispositivo"/>
+      <div class="form-group has-feedback">
+	<input id="Hash" type="text" class="form-control" placeholder="Token" name="paramToken">
+	<span class="glyphicon fa-key form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+      <div class="row">
+	<!-- /.col -->
+        <div class="col-xs-4">
+<!--	  <button type="submit" class="btn btn-primary btn-block btn-flat">Agregar</button> -->
+           <input class="btn btn-primary btn-block btn-flat" type="button" href="javascript:;" onclick="creaDevice($('#valor1').val(),$('#valor2').val(),$('#Hash').val());return false;" value="Crear Dispositivo"/>
         </div>
         <!-- /.col -->
       </div>
     </form>
+	<br>
+	<div class="col-xs-4">
+	  <input class="btn btn-primary btn-block btn-fat" type="button" href="javascript:;" onclick="calculaHash();return false;" value="Generar Token"/>
+	</div>
         <!-- /.box-body -->
-
         <div class="box-footer">
           <!--Footer-->
         </div>

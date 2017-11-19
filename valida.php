@@ -1,6 +1,8 @@
 <?php 
 include("conectar.php"); 
 
+error_reporting(E_ALL ^ E_NOTICE);
+
 $correo = $_POST["email"]; 
 $password = md5($_POST["password"]);
 
