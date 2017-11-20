@@ -23,13 +23,13 @@ if($row[0]=="" || $row[1] =="")
 		$_query = insertData($con,"INSERT INTO users VALUES(NULL,$_timeStamp,'$_paramNick','$_crypt','$_paramEmail','$_paramNames','$_paramCompany','jose.jpg')");
 		if($_query)
 		{
-			header("location: index.php");
+			header("location: blank.php");
 
 		}else{
 			header("location: register.php");
 		     }
 		}
 }else{
-	header("location: register.php");
+	header("location: blank.php");
      }
 ?>

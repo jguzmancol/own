@@ -5,12 +5,15 @@ include("conectar.php");
 
 $con = conex();
 
-$consulta1 = consulta_sql($con,"SELECT user,nombres,empresa,foto FROM users WHERE mail='".$_SESSION['mail']."'");
+$consulta1 = consulta_sql($con,"SELECT user,nombres,empresa,foto,rol FROM users WHERE mail='".$_SESSION['mail']."'");
 
 $row1 = mysqli_fetch_array($consulta1, MYSQLI_NUM);
 
-$consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as nombres, users.empresa as empresa, devices.device as dispositivo, devices.description as descripcion, devices.fecha as fecha_registro, devices.password as password from users, devices where users.usersid=devices.usersid");
-
+if($row1[4]=="admin"){
+$consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as nombres, users.empresa as empresa, devices.device as dispositivo, devices.description as descripcion, devices.fecha as fecha_registro, devices.password as password, users.rol from users, devices where users.usersid=devices.usersid");
+}else{
+$consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as nombres, users.empresa as empresa, devices.device as dispositivo, devices.description as descripcion, devices.fecha as fecha_registro, devices.password as password  from users, devices where users.usersid=devices.usersid and users.mail='".$_SESSION['mail']."'");
+}
 #$row = mysqli_fetch_row($consulta, MYSQLI_NUM);
 ?>
 
@@ -52,7 +55,7 @@ $consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as no
 
   <header class="main-header">
     <!-- Logo -->
-    <a href="../../index2.html" class="logo">
+    <a href="http://www.gotlandgroup.com" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>A</b>LT</span>
       <!-- logo for regular state and mobile devices -->
@@ -305,7 +308,7 @@ $consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as no
                   <a href="#" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                  <a href="logout.php" class="btn btn-default btn-flat">Salir</a>
                 </div>
               </li>
             </ul>
@@ -357,6 +360,10 @@ $consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as no
             <li><a href="blank.php"><i class="fa fa-circle-o"></i> Dashboard</a></li>
           </ul>
         </li>
+<?php
+if($row[4]=="admin")
+{
+?>
         <li class="treeview">
           <a href="#">
             <i class="fa fa-files-o"></i>
@@ -425,6 +432,9 @@ $consulta = consulta_sql($con,"SELECT users.user as usuario, users.nombres as no
             <li><a href="../forms/editors.html"><i class="fa fa-circle-o"></i> Editors</a></li>
           </ul>
         </li>
+<?php
+}
+?>
         <li class="treeview active">
           <a href="#">
             <i class="fa fa-table"></i> <span>Dispositivos</span>
@@ -487,7 +497,7 @@ while($fila=mysqli_fetch_array($consulta, MYSQLI_NUM))
 		  <td><?php echo $fila[5]; ?></td>
 		  <td><?php echo $fila[6]; ?></td>
 		  <td>
- 		  <a href="https://www.w3schools.com">Borrar</a>
+ 		  <a href="#">Borrar</a>
 		  </td>
                 </tr>
 <?php

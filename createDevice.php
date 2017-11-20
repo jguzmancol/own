@@ -22,7 +22,9 @@ $row_1 = mysqli_fetch_array($consulta0, MYSQLI_NUM);
 $_valor = $row_1[0];
 $_valor1 = $row_1[1];
 
-$consulta = consulta_sql($con,"SELECT device FROM devices WHERE device='$_paramDeviceId'");
+#$consulta = consulta_sql($con,"SELECT device FROM devices WHERE device='$_paramDeviceId'");
+
+$consulta= consulta_sql($con,"SELECT devices.device FROM devices, users WHERE devices.usersid=users.usersid AND users.mail='".$_paramEmail."' AND devices.device='".$_paramDeviceId."'");
 
 $row = mysqli_fetch_array($consulta, MYSQLI_NUM);
 
@@ -47,4 +49,8 @@ echo $ok;
 		echo $error;
 	     }
 }
+
+#$conn = new SAMConnection();
+
+
 ?>

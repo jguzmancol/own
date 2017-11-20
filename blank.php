@@ -5,7 +5,7 @@ include("conectar.php");
 
 $con = conex();
 
-$consulta = consulta_sql($con,"SELECT user,nombres,empresa,foto FROM users WHERE mail='".$_SESSION['mail']."'");
+$consulta = consulta_sql($con,"SELECT user,nombres,empresa,foto,rol FROM users WHERE mail='".$_SESSION['mail']."'");
 
 $row = mysqli_fetch_array($consulta, MYSQLI_NUM);
 ?>
@@ -309,6 +309,10 @@ $("#Hash").val(response);
             <li><a href="blank.php"><i class="fa fa-circle-o"></i> Dashboard</a></li>
           </ul>
         </li>
+<?php
+if($row[4]=="admin")
+{
+?>
         <li class="treeview">
           <a href="#">
             <i class="fa fa-files-o"></i>
@@ -369,6 +373,9 @@ $("#Hash").val(response);
             <li><a href="../forms/editors.html"><i class="fa fa-circle-o"></i> Editors</a></li>
           </ul>
         </li>
+<?php
+}
+?>
         <li class="treeview">
           <a href="#">
             <i class="fa fa-table"></i> <span>Dispositivos</span>
@@ -381,6 +388,24 @@ $("#Hash").val(response);
             <li><a href="data.php"><i class="fa fa-circle-o"></i> Data tables</a></li>
           </ul>
         </li>
+<?php
+if($row[4]=="admin")
+{
+?>
+       <li class="treeview">
+          <a href="#">
+            <i class="fa fa-table"></i> <span>Registro Clientes</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="register.php"><i class="fa fa-circle-o"></i> Registrar</a></li>
+          </ul>
+        </li>
+<?php
+}
+?>
     </section>
     <!-- /.sidebar -->
   </aside>
